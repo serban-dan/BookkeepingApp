@@ -1,0 +1,2 @@
+DailyFee=2.50
+OrderEtaDays=7
