@@ -17,6 +17,7 @@ namespace BookkeepingApp
         public MainForm(IBookRepository bookRepo, IRentalRepository rentalRepo)
         {
             InitializeComponent();
+            this.MinimumSize = this.Size;
             FixResizingBehavior();
 
             _bookRepo = bookRepo;
@@ -385,24 +386,25 @@ namespace BookkeepingApp
 
         private void FixResizingBehavior()
         {
-            // The main window's minimum size prevents the UI from crushing in on itself
-            this.MinimumSize = new System.Drawing.Size(900, 700);
 
-            // Top Left: Inventory Grid stretches wide, but stays fixed height so it doesn't overlap the bottom
-            grpInventory.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            // 1. INVENTORY (Top Left): Stretches horizontally AND vertically
+            grpInventory.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvBooks.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 
-            // Top Right: Add Book panel stays pinned to the top right corner
+            // 2. ADD BOOK (Top Right): Stays pinned to the top right, never stretches
             grpAddBook.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnViewStats.Anchor = AnchorStyles.Top | AnchorStyles.Right;
 
-            // Bottom: Rentals panel stretches wide AND stretches down to fill remaining screen space
-            grpRentals.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            // 3. RENTALS (Bottom): Pinned ONLY to the bottom. 
+            // As the window grows taller, this panel gets pushed down to make room for the top grid.
+            grpRentals.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+
+            // The grid inside the rental panel stretches to fill the panel
             dgvRentals.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 
-            // Keep the Rent/Return buttons anchored to their specific corners within the Rental group
+            // Keep buttons pinned to the right side of the bottom panel
             btnRent.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnReturn.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnViewStats.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         }
     }
 }
