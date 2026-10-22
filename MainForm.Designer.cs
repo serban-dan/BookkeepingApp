@@ -23,7 +23,6 @@ partial class MainForm
         btnSearch = new Button();
         dgvBooks = new DataGridView();
         btnOrderMissing = new Button();
-
         grpAddBook = new GroupBox();
         lblNewTitle = new Label();
         txtNewBookTitle = new TextBox();
@@ -31,8 +30,8 @@ partial class MainForm
         pbCoverPreview = new PictureBox();
         btnSelectCover = new Button();
         btnAddBook = new Button();
-
         grpRentals = new GroupBox();
+        btnViewStats = new Button();
         lblCustomerName = new Label();
         txtCustomerName = new TextBox();
         lblRentDays = new Label();
@@ -40,7 +39,7 @@ partial class MainForm
         btnRent = new Button();
         dgvRentals = new DataGridView();
         btnReturn = new Button();
-
+        chkDarkMode = new CheckBox();
         grpInventory.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvBooks).BeginInit();
         grpAddBook.SuspendLayout();
@@ -49,7 +48,6 @@ partial class MainForm
         ((System.ComponentModel.ISupportInitialize)nudRentDays).BeginInit();
         ((System.ComponentModel.ISupportInitialize)dgvRentals).BeginInit();
         SuspendLayout();
-
         // 
         // grpInventory
         // 
@@ -58,7 +56,7 @@ partial class MainForm
         grpInventory.Controls.Add(btnSearch);
         grpInventory.Controls.Add(dgvBooks);
         grpInventory.Controls.Add(btnOrderMissing);
-        grpInventory.Location = new Point(12, 12);
+        grpInventory.Location = new Point(12, 42);
         grpInventory.Name = "grpInventory";
         grpInventory.Size = new Size(520, 350);
         grpInventory.TabIndex = 0;
@@ -121,7 +119,7 @@ partial class MainForm
         grpAddBook.Controls.Add(pbCoverPreview);
         grpAddBook.Controls.Add(btnSelectCover);
         grpAddBook.Controls.Add(btnAddBook);
-        grpAddBook.Location = new Point(545, 12);
+        grpAddBook.Location = new Point(547, 42);
         grpAddBook.Name = "grpAddBook";
         grpAddBook.Size = new Size(325, 350);
         grpAddBook.TabIndex = 1;
@@ -133,7 +131,7 @@ partial class MainForm
         lblNewTitle.AutoSize = true;
         lblNewTitle.Location = new Point(20, 30);
         lblNewTitle.Name = "lblNewTitle";
-        lblNewTitle.Size = new Size(62, 15);
+        lblNewTitle.Size = new Size(63, 15);
         lblNewTitle.TabIndex = 8;
         lblNewTitle.Text = "Book Title:";
         // 
@@ -149,7 +147,7 @@ partial class MainForm
         lblCoverPreview.AutoSize = true;
         lblCoverPreview.Location = new Point(20, 85);
         lblCoverPreview.Name = "lblCoverPreview";
-        lblCoverPreview.Size = new Size(86, 15);
+        lblCoverPreview.Size = new Size(85, 15);
         lblCoverPreview.TabIndex = 9;
         lblCoverPreview.Text = "Cover Preview:";
         // 
@@ -183,6 +181,7 @@ partial class MainForm
         // 
         // grpRentals
         // 
+        grpRentals.Controls.Add(btnViewStats);
         grpRentals.Controls.Add(lblCustomerName);
         grpRentals.Controls.Add(txtCustomerName);
         grpRentals.Controls.Add(lblRentDays);
@@ -190,12 +189,22 @@ partial class MainForm
         grpRentals.Controls.Add(btnRent);
         grpRentals.Controls.Add(dgvRentals);
         grpRentals.Controls.Add(btnReturn);
-        grpRentals.Location = new Point(12, 375);
+        grpRentals.Location = new Point(12, 398);
         grpRentals.Name = "grpRentals";
         grpRentals.Size = new Size(858, 275);
         grpRentals.TabIndex = 2;
         grpRentals.TabStop = false;
         grpRentals.Text = "2. Rental Desk (Select from Inventory to Rent, or from below to Return)";
+        // 
+        // btnViewStats
+        // 
+        btnViewStats.Location = new Point(720, 126);
+        btnViewStats.Name = "btnViewStats";
+        btnViewStats.Size = new Size(118, 54);
+        btnViewStats.TabIndex = 7;
+        btnViewStats.Text = "View Store Statistics";
+        btnViewStats.UseVisualStyleBackColor = true;
+        btnViewStats.Click += btnViewStats_Click;
         // 
         // lblCustomerName
         // 
@@ -218,7 +227,7 @@ partial class MainForm
         lblRentDays.AutoSize = true;
         lblRentDays.Location = new Point(285, 35);
         lblRentDays.Name = "lblRentDays";
-        lblRentDays.Size = new Size(82, 15);
+        lblRentDays.Size = new Size(78, 15);
         lblRentDays.TabIndex = 2;
         lblRentDays.Text = "Days To Rent:";
         // 
@@ -262,18 +271,29 @@ partial class MainForm
         btnReturn.Text = "Return Selected";
         btnReturn.UseVisualStyleBackColor = true;
         // 
+        // chkDarkMode
+        // 
+        chkDarkMode.AutoSize = true;
+        chkDarkMode.Location = new Point(788, 12);
+        chkDarkMode.Name = "chkDarkMode";
+        chkDarkMode.Size = new Size(84, 19);
+        chkDarkMode.TabIndex = 3;
+        chkDarkMode.Text = "Dark Mode";
+        chkDarkMode.UseVisualStyleBackColor = true;
+        chkDarkMode.CheckedChanged += chkDarkMode_CheckedChanged;
+        // 
         // MainForm
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(884, 661);
+        ClientSize = new Size(884, 693);
+        Controls.Add(chkDarkMode);
         Controls.Add(grpRentals);
         Controls.Add(grpAddBook);
         Controls.Add(grpInventory);
         Name = "MainForm";
         StartPosition = FormStartPosition.CenterScreen;
         Text = "Admin Panel - Bookkeeping";
-
         grpInventory.ResumeLayout(false);
         grpInventory.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)dgvBooks).EndInit();
@@ -285,6 +305,7 @@ partial class MainForm
         ((System.ComponentModel.ISupportInitialize)nudRentDays).EndInit();
         ((System.ComponentModel.ISupportInitialize)dgvRentals).EndInit();
         ResumeLayout(false);
+        PerformLayout();
     }
 
     #endregion
@@ -312,4 +333,6 @@ partial class MainForm
     private Button btnRent;
     private DataGridView dgvRentals;
     private Button btnReturn;
+    private Button btnViewStats;
+    private CheckBox chkDarkMode;
 }

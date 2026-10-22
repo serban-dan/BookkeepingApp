@@ -242,5 +242,80 @@ namespace BookkeepingApp
             await RefreshBookGridAsync();
             await RefreshRentalsGridAsync();
         }
+
+        private void btnViewStats_Click(object sender, EventArgs e)
+        {
+            new StatisticsForm().ShowDialog();
+        }
+
+        private void chkDarkMode_CheckedChanged(object sender, EventArgs e)
+        {
+            ApplyTheme(chkDarkMode.Checked);
+        }
+
+        private void ApplyTheme(bool isDark)
+        {
+            // Define our color palettes
+            Color backColor = isDark ? Color.FromArgb(45, 45, 48) : SystemColors.Control;
+            Color foreColor = isDark ? Color.White : SystemColors.ControlText;
+            Color inputBackColor = isDark ? Color.FromArgb(60, 60, 60) : SystemColors.Window;
+            Color gridBackColor = isDark ? Color.FromArgb(30, 30, 30) : SystemColors.AppWorkspace;
+
+            // Apply to the main form itself
+            this.BackColor = backColor;
+            this.ForeColor = foreColor;
+
+            // Apply to all nested controls
+            UpdateControlColors(this.Controls, backColor, foreColor, inputBackColor, gridBackColor, isDark);
+        }
+
+        private void UpdateControlColors(Control.ControlCollection controls, Color back, Color fore, Color inputBack, Color gridBack, bool isDark)
+        {
+            foreach (Control c in controls)
+            {
+                // Recursively update nested controls (like things inside GroupBoxes)
+                if (c.HasChildren)
+                {
+                    UpdateControlColors(c.Controls, back, fore, inputBack, gridBack, isDark);
+                }
+
+                // Apply specific styles based on the control type
+                if (c is Button b)
+                {
+                    b.FlatStyle = isDark ? FlatStyle.Flat : FlatStyle.Standard;
+                    b.BackColor = inputBack;
+                    b.ForeColor = fore;
+                    if (isDark) b.FlatAppearance.BorderColor = Color.Gray;
+                }
+                else if (c is TextBox t)
+                {
+                    t.BackColor = inputBack;
+                    t.ForeColor = fore;
+                    t.BorderStyle = isDark ? BorderStyle.FixedSingle : BorderStyle.Fixed3D;
+                }
+                else if (c is NumericUpDown n)
+                {
+                    n.BackColor = inputBack;
+                    n.ForeColor = fore;
+                }
+                else if (c is DataGridView dgv)
+                {
+                    // Grid requires specific cell-level styling
+                    dgv.BackgroundColor = gridBack;
+                    dgv.DefaultCellStyle.BackColor = inputBack;
+                    dgv.DefaultCellStyle.ForeColor = fore;
+                    dgv.ColumnHeadersDefaultCellStyle.BackColor = back;
+                    dgv.ColumnHeadersDefaultCellStyle.ForeColor = fore;
+                    dgv.RowHeadersDefaultCellStyle.BackColor = back;
+
+                    // WinForms requires disabling visual styles to custom-paint grid headers
+                    dgv.EnableHeadersVisualStyles = !isDark;
+                }
+                else if (c is GroupBox g)
+                {
+                    g.ForeColor = fore;
+                }
+            }
+        }
     }
 }
