@@ -26,11 +26,20 @@ namespace BookkeepingApp
             btnSelectCover.Click += BtnSelectCover_Click;
             btnAddBook.Click += BtnAddBook_Click;
             btnOrderMissing.Click += BtnOrderMissing_Click;
+            btnRent.Click += BtnRent_Click;
+            btnReturn.Click += BtnReturn_Click;
         }
 
         private async void MainForm_Load(object sender, EventArgs e)
         {
             await RefreshBookGridAsync();
+            await RefreshRentalsGridAsync();
+        }
+
+        private async Task RefreshRentalsGridAsync()
+        {
+            var rentals = await _rentalRepo.GetActiveRentalsAsync();
+            dgvRentals.DataSource = rentals;
         }
 
         private async Task RefreshBookGridAsync()
@@ -129,6 +138,88 @@ namespace BookkeepingApp
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 btnOrderMissing.Enabled = true; // Re-enable if it failed
             }
+        }
+
+        private async void BtnRent_Click(object sender, EventArgs e)
+        {
+            // 1. Validate inputs
+            if (string.IsNullOrWhiteSpace(txtCustomerName.Text))
+            {
+                MessageBox.Show("Please enter the customer's name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (dgvBooks.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Please select a book from the Inventory grid first.", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // 2. Extract the selected Book
+            var selectedRow = dgvBooks.SelectedRows[0];
+            var bookId = selectedRow.Cells["Id"].Value.ToString();
+            var isAvailable = (bool)selectedRow.Cells["IsAvailable"].Value;
+
+            if (!isAvailable)
+            {
+                MessageBox.Show("This book is already rented out!", "Not Available", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // 3. Create and save the Rental
+            int days = (int)nudRentDays.Value;
+            var rental = new Rental
+            {
+                RentalId = Guid.NewGuid().ToString(),
+                BookId = bookId,
+                CustomerName = txtCustomerName.Text.Trim(),
+                RentDate = DateTime.Now,
+                DueDate = DateTime.Now.AddDays(days),
+                IsReturned = false
+            };
+
+            await _rentalRepo.RentBookAsync(rental);
+
+            // 4. Clean up UI and refresh
+            txtCustomerName.Clear();
+            nudRentDays.Value = 7;
+            await RefreshBookGridAsync();
+            await RefreshRentalsGridAsync();
+
+            MessageBox.Show("Book successfully rented!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private async void BtnReturn_Click(object sender, EventArgs e)
+        {
+            // 1. Validate selection
+            if (dgvRentals.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Please select a rental record from the Active Rentals grid.", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // 2. Process Return
+            var selectedRow = dgvRentals.SelectedRows[0];
+            var rentalId = selectedRow.Cells["RentalId"].Value.ToString();
+            var customer = selectedRow.Cells["CustomerName"].Value.ToString();
+
+            decimal lateFee = await _rentalRepo.ReturnBookAsync(rentalId);
+
+            // 3. Handle late fees
+            if (lateFee > 0)
+            {
+                MessageBox.Show($"Book returned by {customer}.\n\nWARNING: The book was overdue.\nLate Fee to Collect: ${lateFee:0.00}",
+                                "Late Return", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                MessageBox.Show($"Book returned successfully by {customer} on time. No fees due.",
+                                "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            // 4. Refresh Grids
+            await RefreshBookGridAsync();
+            await RefreshRentalsGridAsync();
         }
     }
 }

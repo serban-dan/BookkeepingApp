@@ -2,15 +2,8 @@
 
 partial class MainForm
 {
-    /// <summary>
-    ///  Required designer variable.
-    /// </summary>
     private System.ComponentModel.IContainer components = null;
 
-    /// <summary>
-    ///  Clean up any resources being used.
-    /// </summary>
-    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
     protected override void Dispose(bool disposing)
     {
         if (disposing && (components != null))
@@ -22,10 +15,6 @@ partial class MainForm
 
     #region Windows Form Designer generated code
 
-    /// <summary>
-    ///  Required method for Designer support - do not modify
-    ///  the contents of this method with the code editor.
-    /// </summary>
     private void InitializeComponent()
     {
         grpInventory = new GroupBox();
@@ -34,6 +23,7 @@ partial class MainForm
         btnSearch = new Button();
         dgvBooks = new DataGridView();
         btnOrderMissing = new Button();
+
         grpAddBook = new GroupBox();
         lblNewTitle = new Label();
         txtNewBookTitle = new TextBox();
@@ -42,16 +32,27 @@ partial class MainForm
         btnSelectCover = new Button();
         btnAddBook = new Button();
 
+        grpRentals = new GroupBox();
+        lblCustomerName = new Label();
+        txtCustomerName = new TextBox();
+        lblRentDays = new Label();
+        nudRentDays = new NumericUpDown();
+        btnRent = new Button();
+        dgvRentals = new DataGridView();
+        btnReturn = new Button();
+
         grpInventory.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvBooks).BeginInit();
         grpAddBook.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)pbCoverPreview).BeginInit();
+        grpRentals.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)nudRentDays).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)dgvRentals).BeginInit();
         SuspendLayout();
 
         // 
         // grpInventory
         // 
-        grpInventory.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         grpInventory.Controls.Add(lblSearch);
         grpInventory.Controls.Add(txtSearch);
         grpInventory.Controls.Add(btnSearch);
@@ -59,10 +60,10 @@ partial class MainForm
         grpInventory.Controls.Add(btnOrderMissing);
         grpInventory.Location = new Point(12, 12);
         grpInventory.Name = "grpInventory";
-        grpInventory.Size = new Size(520, 480);
+        grpInventory.Size = new Size(520, 350);
         grpInventory.TabIndex = 0;
         grpInventory.TabStop = false;
-        grpInventory.Text = "Inventory Management";
+        grpInventory.Text = "1. Inventory Management (Select a book to rent)";
         // 
         // lblSearch
         // 
@@ -75,7 +76,6 @@ partial class MainForm
         // 
         // txtSearch
         // 
-        txtSearch.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         txtSearch.Location = new Point(15, 50);
         txtSearch.Name = "txtSearch";
         txtSearch.Size = new Size(395, 23);
@@ -83,7 +83,6 @@ partial class MainForm
         // 
         // btnSearch
         // 
-        btnSearch.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         btnSearch.Location = new Point(420, 49);
         btnSearch.Name = "btnSearch";
         btnSearch.Size = new Size(85, 25);
@@ -95,21 +94,19 @@ partial class MainForm
         // 
         dgvBooks.AllowUserToAddRows = false;
         dgvBooks.AllowUserToDeleteRows = false;
-        dgvBooks.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         dgvBooks.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         dgvBooks.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
         dgvBooks.Location = new Point(15, 85);
         dgvBooks.Name = "dgvBooks";
         dgvBooks.ReadOnly = true;
         dgvBooks.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        dgvBooks.Size = new Size(490, 335);
+        dgvBooks.Size = new Size(490, 205);
         dgvBooks.TabIndex = 3;
         // 
         // btnOrderMissing
         // 
-        btnOrderMissing.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
         btnOrderMissing.Enabled = false;
-        btnOrderMissing.Location = new Point(15, 430);
+        btnOrderMissing.Location = new Point(15, 300);
         btnOrderMissing.Name = "btnOrderMissing";
         btnOrderMissing.Size = new Size(160, 35);
         btnOrderMissing.TabIndex = 2;
@@ -118,7 +115,6 @@ partial class MainForm
         // 
         // grpAddBook
         // 
-        grpAddBook.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
         grpAddBook.Controls.Add(lblNewTitle);
         grpAddBook.Controls.Add(txtNewBookTitle);
         grpAddBook.Controls.Add(lblCoverPreview);
@@ -127,7 +123,7 @@ partial class MainForm
         grpAddBook.Controls.Add(btnAddBook);
         grpAddBook.Location = new Point(545, 12);
         grpAddBook.Name = "grpAddBook";
-        grpAddBook.Size = new Size(325, 480);
+        grpAddBook.Size = new Size(325, 350);
         grpAddBook.TabIndex = 1;
         grpAddBook.TabStop = false;
         grpAddBook.Text = "Add New Book";
@@ -159,19 +155,17 @@ partial class MainForm
         // 
         // pbCoverPreview
         // 
-        pbCoverPreview.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         pbCoverPreview.BorderStyle = BorderStyle.FixedSingle;
         pbCoverPreview.Location = new Point(20, 105);
         pbCoverPreview.Name = "pbCoverPreview";
-        pbCoverPreview.Size = new Size(285, 275);
+        pbCoverPreview.Size = new Size(285, 145);
         pbCoverPreview.SizeMode = PictureBoxSizeMode.Zoom;
         pbCoverPreview.TabIndex = 6;
         pbCoverPreview.TabStop = false;
         // 
         // btnSelectCover
         // 
-        btnSelectCover.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-        btnSelectCover.Location = new Point(20, 390);
+        btnSelectCover.Location = new Point(20, 260);
         btnSelectCover.Name = "btnSelectCover";
         btnSelectCover.Size = new Size(285, 30);
         btnSelectCover.TabIndex = 5;
@@ -180,22 +174,102 @@ partial class MainForm
         // 
         // btnAddBook
         // 
-        btnAddBook.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-        btnAddBook.Location = new Point(20, 430);
+        btnAddBook.Location = new Point(20, 300);
         btnAddBook.Name = "btnAddBook";
         btnAddBook.Size = new Size(285, 35);
         btnAddBook.TabIndex = 7;
         btnAddBook.Text = "Add Book";
         btnAddBook.UseVisualStyleBackColor = true;
         // 
+        // grpRentals
+        // 
+        grpRentals.Controls.Add(lblCustomerName);
+        grpRentals.Controls.Add(txtCustomerName);
+        grpRentals.Controls.Add(lblRentDays);
+        grpRentals.Controls.Add(nudRentDays);
+        grpRentals.Controls.Add(btnRent);
+        grpRentals.Controls.Add(dgvRentals);
+        grpRentals.Controls.Add(btnReturn);
+        grpRentals.Location = new Point(12, 375);
+        grpRentals.Name = "grpRentals";
+        grpRentals.Size = new Size(858, 275);
+        grpRentals.TabIndex = 2;
+        grpRentals.TabStop = false;
+        grpRentals.Text = "2. Rental Desk (Select from Inventory to Rent, or from below to Return)";
+        // 
+        // lblCustomerName
+        // 
+        lblCustomerName.AutoSize = true;
+        lblCustomerName.Location = new Point(15, 35);
+        lblCustomerName.Name = "lblCustomerName";
+        lblCustomerName.Size = new Size(97, 15);
+        lblCustomerName.TabIndex = 0;
+        lblCustomerName.Text = "Customer Name:";
+        // 
+        // txtCustomerName
+        // 
+        txtCustomerName.Location = new Point(115, 32);
+        txtCustomerName.Name = "txtCustomerName";
+        txtCustomerName.Size = new Size(150, 23);
+        txtCustomerName.TabIndex = 1;
+        // 
+        // lblRentDays
+        // 
+        lblRentDays.AutoSize = true;
+        lblRentDays.Location = new Point(285, 35);
+        lblRentDays.Name = "lblRentDays";
+        lblRentDays.Size = new Size(82, 15);
+        lblRentDays.TabIndex = 2;
+        lblRentDays.Text = "Days To Rent:";
+        // 
+        // nudRentDays
+        // 
+        nudRentDays.Location = new Point(370, 32);
+        nudRentDays.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+        nudRentDays.Name = "nudRentDays";
+        nudRentDays.Size = new Size(60, 23);
+        nudRentDays.TabIndex = 3;
+        nudRentDays.Value = new decimal(new int[] { 7, 0, 0, 0 });
+        // 
+        // btnRent
+        // 
+        btnRent.Location = new Point(450, 30);
+        btnRent.Name = "btnRent";
+        btnRent.Size = new Size(120, 28);
+        btnRent.TabIndex = 4;
+        btnRent.Text = "Rent Selected Book";
+        btnRent.UseVisualStyleBackColor = true;
+        // 
+        // dgvRentals
+        // 
+        dgvRentals.AllowUserToAddRows = false;
+        dgvRentals.AllowUserToDeleteRows = false;
+        dgvRentals.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+        dgvRentals.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+        dgvRentals.Location = new Point(15, 75);
+        dgvRentals.Name = "dgvRentals";
+        dgvRentals.ReadOnly = true;
+        dgvRentals.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+        dgvRentals.Size = new Size(690, 185);
+        dgvRentals.TabIndex = 5;
+        // 
+        // btnReturn
+        // 
+        btnReturn.Location = new Point(720, 75);
+        btnReturn.Name = "btnReturn";
+        btnReturn.Size = new Size(120, 45);
+        btnReturn.TabIndex = 6;
+        btnReturn.Text = "Return Selected";
+        btnReturn.UseVisualStyleBackColor = true;
+        // 
         // MainForm
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(884, 511);
+        ClientSize = new Size(884, 661);
+        Controls.Add(grpRentals);
         Controls.Add(grpAddBook);
         Controls.Add(grpInventory);
-        MinimumSize = new Size(750, 450);
         Name = "MainForm";
         StartPosition = FormStartPosition.CenterScreen;
         Text = "Admin Panel - Bookkeeping";
@@ -206,6 +280,10 @@ partial class MainForm
         grpAddBook.ResumeLayout(false);
         grpAddBook.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)pbCoverPreview).EndInit();
+        grpRentals.ResumeLayout(false);
+        grpRentals.PerformLayout();
+        ((System.ComponentModel.ISupportInitialize)nudRentDays).EndInit();
+        ((System.ComponentModel.ISupportInitialize)dgvRentals).EndInit();
         ResumeLayout(false);
     }
 
@@ -225,4 +303,13 @@ partial class MainForm
     private PictureBox pbCoverPreview;
     private Button btnSelectCover;
     private Button btnAddBook;
+
+    private GroupBox grpRentals;
+    private Label lblCustomerName;
+    private TextBox txtCustomerName;
+    private Label lblRentDays;
+    private NumericUpDown nudRentDays;
+    private Button btnRent;
+    private DataGridView dgvRentals;
+    private Button btnReturn;
 }
