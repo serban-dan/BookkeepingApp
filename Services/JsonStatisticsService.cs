@@ -19,7 +19,8 @@ namespace BookkeepingApp.Services
                 MostPopularBook = "N/A",
                 BusiestRentalDay = "N/A",
                 TotalAllTimeRentals = 0,
-                TotalLateFeesCollected = 0m
+                TotalLateFeesCollected = 0m,
+                Top5Books = new Dictionary<string, int>()
             };
 
             if (!File.Exists(_historyFile)) return stats;
@@ -28,29 +29,22 @@ namespace BookkeepingApp.Services
             if (string.IsNullOrWhiteSpace(json)) return stats;
 
             var history = JsonSerializer.Deserialize<List<RentalHistory>>(json);
-            if (history == null || !history.Any()) return stats;
+            if (history == null || history.Count == 0) return stats;
 
-            // 1. Total Rentals
             stats.TotalAllTimeRentals = history.Count;
-
-            // 2. Total Fees
             stats.TotalLateFeesCollected = history.Sum(h => h.FeeCollected);
 
-            // 3. Most Popular Book (Group by Title, order by highest count)
-            var mostPopular = history
-                .GroupBy(h => h.BookTitle)
-                .OrderByDescending(g => g.Count())
-                .FirstOrDefault();
+            // Get the most popular single book
+            var bookGroups = history.GroupBy(h => h.BookTitle).OrderByDescending(g => g.Count());
+            var mostPopular = bookGroups.FirstOrDefault();
 
             if (mostPopular != null)
                 stats.MostPopularBook = $"{mostPopular.Key} ({mostPopular.Count()} rentals)";
 
-            // 4. Busiest Day (Group by Date, order by highest count)
-            var busiestDay = history
-                .GroupBy(h => h.RentDate.Date)
-                .OrderByDescending(g => g.Count())
-                .FirstOrDefault();
+            // Populate the Top 5 for the chart
+            stats.Top5Books = bookGroups.Take(5).ToDictionary(g => g.Key, g => g.Count());
 
+            var busiestDay = history.GroupBy(h => h.RentDate.Date).OrderByDescending(g => g.Count()).FirstOrDefault();
             if (busiestDay != null)
                 stats.BusiestRentalDay = $"{busiestDay.Key.ToShortDateString()} ({busiestDay.Count()} rentals)";
 

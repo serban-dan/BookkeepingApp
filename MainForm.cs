@@ -272,12 +272,12 @@ namespace BookkeepingApp
             await RefreshRentalsGridAsync();
         }
 
-        private void btnViewStats_Click(object sender, EventArgs e)
+        private void BtnViewStats_Click(object sender, EventArgs e)
         {
             new StatisticsForm().ShowDialog();
         }
 
-        private void chkDarkMode_CheckedChanged(object sender, EventArgs e)
+        private void ChkDarkMode_CheckedChanged(object sender, EventArgs e)
         {
             ApplyTheme(chkDarkMode.Checked);
         }
@@ -298,7 +298,7 @@ namespace BookkeepingApp
             UpdateControlColors(this.Controls, backColor, foreColor, inputBackColor, gridBackColor, isDark);
         }
 
-        private void UpdateControlColors(Control.ControlCollection controls, Color back, Color fore, Color inputBack, Color gridBack, bool isDark)
+        private static void UpdateControlColors(Control.ControlCollection controls, Color back, Color fore, Color inputBack, Color gridBack, bool isDark)
         {
             foreach (Control c in controls)
             {

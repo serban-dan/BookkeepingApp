@@ -204,7 +204,7 @@ partial class MainForm
         btnViewStats.TabIndex = 7;
         btnViewStats.Text = "View Store Statistics";
         btnViewStats.UseVisualStyleBackColor = true;
-        btnViewStats.Click += btnViewStats_Click;
+        btnViewStats.Click += BtnViewStats_Click;
         // 
         // lblCustomerName
         // 
@@ -280,7 +280,7 @@ partial class MainForm
         chkDarkMode.TabIndex = 3;
         chkDarkMode.Text = "Dark Mode";
         chkDarkMode.UseVisualStyleBackColor = true;
-        chkDarkMode.CheckedChanged += chkDarkMode_CheckedChanged;
+        chkDarkMode.CheckedChanged += ChkDarkMode_CheckedChanged;
         // 
         // MainForm
         // 
