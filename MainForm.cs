@@ -82,28 +82,49 @@ namespace BookkeepingApp
 
         private async void BtnAddBook_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtNewBookTitle.Text))
+            string newTitle = txtNewBookTitle.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(newTitle))
             {
                 MessageBox.Show("Please enter a book title.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
+            // DUPLICATE CHECKING
+            var existingBook = await _bookRepo.GetBookByTitleAsync(newTitle);
+
+            if (existingBook != null)
+            {
+                // Prompt the clerk to just add a copy instead of creating a new database entry
+                var result = MessageBox.Show($"'{newTitle}' is already in the inventory (Total Copies: {existingBook.TotalCopies}).\n\nWould you like to add 1 more copy to the existing stock?",
+                    "Duplicate Found", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    await _bookRepo.AddCopiesAsync(existingBook.Id, 1);
+                    await RefreshBookGridAsync();
+                    MessageBox.Show("1 copy added to existing inventory.", "Stock Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                return;
+            }
+
+            // If it's not a duplicate, add it normally
             var newBook = new Book
             {
-                Title = txtNewBookTitle.Text.Trim(),
+                Title = newTitle,
                 CoverImagePath = _selectedCoverPath,
-                IsAvailable = true
+                TotalCopies = 1,
+                AvailableCopies = 1
             };
 
             await _bookRepo.AddBookAsync(newBook);
 
-            // Clean up UI
             txtNewBookTitle.Clear();
             _selectedCoverPath = string.Empty;
             pbCoverPreview.ImageLocation = null;
 
             await RefreshBookGridAsync();
-            MessageBox.Show("Book added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("New book added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private async void BtnOrderMissing_Click(object sender, EventArgs e)

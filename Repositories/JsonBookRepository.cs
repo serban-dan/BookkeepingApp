@@ -85,5 +85,27 @@ namespace BookkeepingApp.Repositories
 
             return order;
         }
+
+        public async Task<Book> GetBookByTitleAsync(string title)
+        {
+            var books = await GetAllBooksAsync();
+            // Look for an exact match (ignoring upper/lower case)
+            return books.FirstOrDefault(b => b.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public async Task AddCopiesAsync(string bookId, int copiesToAdd)
+        {
+            var books = await GetAllBooksAsync();
+            var book = books.FirstOrDefault(b => b.Id == bookId);
+
+            if (book != null)
+            {
+                book.TotalCopies += copiesToAdd;
+                book.AvailableCopies += copiesToAdd;
+
+                string json = JsonSerializer.Serialize(books, _jsonOptions);
+                await File.WriteAllTextAsync(_booksFile, json);
+            }
+        }
     }
 }

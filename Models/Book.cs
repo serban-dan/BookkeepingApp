@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BookkeepingApp.Models
 {
@@ -8,9 +6,14 @@ namespace BookkeepingApp.Models
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public string Title { get; set; }
-        public bool IsAvailable { get; set; } = true;
 
-        // Required for the Team Project feature (Local Media Storage)
+        // New quantity tracking
+        public int TotalCopies { get; set; } = 1;
+        public int AvailableCopies { get; set; } = 1;
+
+        // This calculates itself automatically now
+        public bool IsAvailable => AvailableCopies > 0;
+
         public string CoverImagePath { get; set; }
     }
 }

@@ -50,7 +50,7 @@ namespace BookkeepingApp.Repositories
             rentals.Add(rental);
             await File.WriteAllTextAsync(_rentalsFile, JsonSerializer.Serialize(rentals, _jsonOptions));
 
-            await UpdateBookAvailabilityAsync(rental.BookId, false);
+            await UpdateBookQuantityAsync(rental.BookId, -1);
         }
 
         public async Task<decimal> ReturnBookAsync(string rentalId)
@@ -67,12 +67,12 @@ namespace BookkeepingApp.Repositories
             decimal fee = _feeService.CalculateFee(rental.DueDate, DateTime.Now);
 
             await File.WriteAllTextAsync(_rentalsFile, JsonSerializer.Serialize(rentals, _jsonOptions));
-            await UpdateBookAvailabilityAsync(rental.BookId, true);
+            await UpdateBookQuantityAsync(rental.BookId, 1);
 
             return fee;
         }
 
-        private async Task UpdateBookAvailabilityAsync(string bookId, bool isAvailable)
+        private async Task UpdateBookQuantityAsync(string bookId, int quantityChange)
         {
             if (!File.Exists(_booksFile)) return;
 
@@ -84,7 +84,13 @@ namespace BookkeepingApp.Repositories
 
             if (book != null)
             {
-                book.IsAvailable = isAvailable;
+                // Rent Testing Overflow check: prevent dropping below 0
+                if (book.AvailableCopies + quantityChange < 0)
+                {
+                    throw new InvalidOperationException("Cannot rent this book. 0 copies available.");
+                }
+
+                book.AvailableCopies += quantityChange;
                 await File.WriteAllTextAsync(_booksFile, JsonSerializer.Serialize(books, _jsonOptions));
             }
         }
