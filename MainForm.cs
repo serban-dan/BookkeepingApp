@@ -42,7 +42,20 @@ namespace BookkeepingApp
         private async Task RefreshRentalsGridAsync()
         {
             var rentals = await _rentalRepo.GetActiveRentalsAsync();
-            dgvRentals.DataSource = rentals;
+            var books = await _bookRepo.GetAllBooksAsync(); // We need the books to look up the titles
+
+            // Use LINQ to create a custom, on-the-fly object just for the DataGrid
+            var displayRentals = rentals.Select(r => new
+            {
+                RentalId = r.RentalId,
+                CustomerName = r.CustomerName,
+                // Look up the title based on the BookId, or default to "Unknown Book" if missing
+                BookTitle = books.FirstOrDefault(b => b.Id == r.BookId)?.Title ?? "Unknown Book",
+                RentDate = r.RentDate,
+                DueDate = r.DueDate
+            }).ToList();
+
+            dgvRentals.DataSource = displayRentals;
             FormatRentalsGrid();
         }
 
@@ -369,17 +382,22 @@ namespace BookkeepingApp
         {
             if (dgvRentals.Columns.Count == 0) return;
 
-            // Hide technical columns
+            // Hide the technical ID
             if (dgvRentals.Columns["RentalId"] != null) dgvRentals.Columns["RentalId"].Visible = false;
-            if (dgvRentals.Columns["BookId"] != null) dgvRentals.Columns["BookId"].Visible = false;
-            if (dgvRentals.Columns["IsReturned"] != null) dgvRentals.Columns["IsReturned"].Visible = false;
 
-            // Rename headers
+            // Rename headers and add spacing
             if (dgvRentals.Columns["CustomerName"] != null) dgvRentals.Columns["CustomerName"].HeaderText = "Customer";
+
+            if (dgvRentals.Columns["BookTitle"] != null)
+            {
+                dgvRentals.Columns["BookTitle"].HeaderText = "Book Title";
+                dgvRentals.Columns["BookTitle"].FillWeight = 200; // Give the title more room
+            }
+
             if (dgvRentals.Columns["RentDate"] != null) dgvRentals.Columns["RentDate"].HeaderText = "Rented On";
             if (dgvRentals.Columns["DueDate"] != null) dgvRentals.Columns["DueDate"].HeaderText = "Due By";
 
-            // Format dates to drop the timestamps (e.g., 10/22/2026)
+            // Format dates cleanly (e.g., 10/22/2026)
             if (dgvRentals.Columns["RentDate"] != null) dgvRentals.Columns["RentDate"].DefaultCellStyle.Format = "d";
             if (dgvRentals.Columns["DueDate"] != null) dgvRentals.Columns["DueDate"].DefaultCellStyle.Format = "d";
         }
