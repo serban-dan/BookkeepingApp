@@ -17,6 +17,8 @@ namespace BookkeepingApp
         public MainForm(IBookRepository bookRepo, IRentalRepository rentalRepo)
         {
             InitializeComponent();
+            FixResizingBehavior();
+
             _bookRepo = bookRepo;
             _rentalRepo = rentalRepo;
 
@@ -40,12 +42,14 @@ namespace BookkeepingApp
         {
             var rentals = await _rentalRepo.GetActiveRentalsAsync();
             dgvRentals.DataSource = rentals;
+            FormatRentalsGrid();
         }
 
         private async Task RefreshBookGridAsync()
         {
             var books = await _bookRepo.GetAllBooksAsync();
             dgvBooks.DataSource = books;
+            FormatBookGrid();
             btnOrderMissing.Enabled = false; // Reset order button
         }
 
@@ -163,8 +167,10 @@ namespace BookkeepingApp
 
         private async void BtnRent_Click(object sender, EventArgs e)
         {
+            string customerName = txtCustomerName.Text.Trim();
+
             // 1. Validate inputs
-            if (string.IsNullOrWhiteSpace(txtCustomerName.Text))
+            if (string.IsNullOrWhiteSpace(customerName))
             {
                 MessageBox.Show("Please enter the customer's name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -176,7 +182,18 @@ namespace BookkeepingApp
                 return;
             }
 
-            // 2. Extract the selected Book
+            // 2. CUSTOMER RENT LIMIT OVERFLOW CHECK
+            var allActiveRentals = await _rentalRepo.GetActiveRentalsAsync();
+            int customerRentalCount = allActiveRentals.Count(r => r.CustomerName.Equals(customerName, StringComparison.OrdinalIgnoreCase));
+
+            if (customerRentalCount >= 5)
+            {
+                MessageBox.Show($"{customerName} has reached the maximum system limit of 5 active rentals. They must return a book before renting another.",
+                    "Rental Limit Overflow", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+
+            // 3. Extract the selected Book
             var selectedRow = dgvBooks.SelectedRows[0];
             var bookId = selectedRow.Cells["Id"].Value.ToString();
             var isAvailable = (bool)selectedRow.Cells["IsAvailable"].Value;
@@ -187,27 +204,39 @@ namespace BookkeepingApp
                 return;
             }
 
-            // 3. Create and save the Rental
+            // 4. Create the Rental
             int days = (int)nudRentDays.Value;
             var rental = new Rental
             {
                 RentalId = Guid.NewGuid().ToString(),
                 BookId = bookId,
-                CustomerName = txtCustomerName.Text.Trim(),
+                CustomerName = customerName,
                 RentDate = DateTime.Now,
                 DueDate = DateTime.Now.AddDays(days),
                 IsReturned = false
             };
 
-            await _rentalRepo.RentBookAsync(rental);
+            // 5. STOCK OVERFLOW CHECK (Try/Catch)
+            try
+            {
+                await _rentalRepo.RentBookAsync(rental);
 
-            // 4. Clean up UI and refresh
-            txtCustomerName.Clear();
-            nudRentDays.Value = 7;
-            await RefreshBookGridAsync();
-            await RefreshRentalsGridAsync();
+                // Clean up UI and refresh grids
+                txtCustomerName.Clear();
+                nudRentDays.Value = 7;
+                await RefreshBookGridAsync();
+                await RefreshRentalsGridAsync();
 
-            MessageBox.Show("Book successfully rented!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Book successfully rented!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (InvalidOperationException ex)
+            {
+                // This catches the exception we throw in JsonRentalRepository if stock drops below 0
+                MessageBox.Show($"Stock Overflow Error: {ex.Message}\n\nThe grid will now refresh to show live data.",
+                    "Transaction Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                await RefreshBookGridAsync();
+            }
         }
 
         private async void BtnReturn_Click(object sender, EventArgs e)
@@ -316,6 +345,64 @@ namespace BookkeepingApp
                     g.ForeColor = fore;
                 }
             }
+        }
+
+        private void FormatBookGrid()
+        {
+            if (dgvBooks.Columns.Count == 0) return;
+
+            // Hide technical columns
+            if (dgvBooks.Columns["Id"] != null) dgvBooks.Columns["Id"].Visible = false;
+            if (dgvBooks.Columns["CoverImagePath"] != null) dgvBooks.Columns["CoverImagePath"].Visible = false;
+
+            // Rename headers and adjust proportions
+            if (dgvBooks.Columns["IsAvailable"] != null) dgvBooks.Columns["IsAvailable"].HeaderText = "Available?";
+            if (dgvBooks.Columns["TotalCopies"] != null) dgvBooks.Columns["TotalCopies"].HeaderText = "Total";
+            if (dgvBooks.Columns["AvailableCopies"] != null) dgvBooks.Columns["AvailableCopies"].HeaderText = "In Stock";
+
+            // Make the Title column take up most of the space
+            if (dgvBooks.Columns["Title"] != null) dgvBooks.Columns["Title"].FillWeight = 200;
+        }
+
+        private void FormatRentalsGrid()
+        {
+            if (dgvRentals.Columns.Count == 0) return;
+
+            // Hide technical columns
+            if (dgvRentals.Columns["RentalId"] != null) dgvRentals.Columns["RentalId"].Visible = false;
+            if (dgvRentals.Columns["BookId"] != null) dgvRentals.Columns["BookId"].Visible = false;
+            if (dgvRentals.Columns["IsReturned"] != null) dgvRentals.Columns["IsReturned"].Visible = false;
+
+            // Rename headers
+            if (dgvRentals.Columns["CustomerName"] != null) dgvRentals.Columns["CustomerName"].HeaderText = "Customer";
+            if (dgvRentals.Columns["RentDate"] != null) dgvRentals.Columns["RentDate"].HeaderText = "Rented On";
+            if (dgvRentals.Columns["DueDate"] != null) dgvRentals.Columns["DueDate"].HeaderText = "Due By";
+
+            // Format dates to drop the timestamps (e.g., 10/22/2026)
+            if (dgvRentals.Columns["RentDate"] != null) dgvRentals.Columns["RentDate"].DefaultCellStyle.Format = "d";
+            if (dgvRentals.Columns["DueDate"] != null) dgvRentals.Columns["DueDate"].DefaultCellStyle.Format = "d";
+        }
+
+        private void FixResizingBehavior()
+        {
+            // The main window's minimum size prevents the UI from crushing in on itself
+            this.MinimumSize = new System.Drawing.Size(900, 700);
+
+            // Top Left: Inventory Grid stretches wide, but stays fixed height so it doesn't overlap the bottom
+            grpInventory.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            dgvBooks.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+
+            // Top Right: Add Book panel stays pinned to the top right corner
+            grpAddBook.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+
+            // Bottom: Rentals panel stretches wide AND stretches down to fill remaining screen space
+            grpRentals.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dgvRentals.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+
+            // Keep the Rent/Return buttons anchored to their specific corners within the Rental group
+            btnRent.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnReturn.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnViewStats.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         }
     }
 }

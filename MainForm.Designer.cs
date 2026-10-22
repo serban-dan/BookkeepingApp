@@ -274,7 +274,7 @@ partial class MainForm
         // chkDarkMode
         // 
         chkDarkMode.AutoSize = true;
-        chkDarkMode.Location = new Point(788, 12);
+        chkDarkMode.Location = new Point(12, 12);
         chkDarkMode.Name = "chkDarkMode";
         chkDarkMode.Size = new Size(84, 19);
         chkDarkMode.TabIndex = 3;
