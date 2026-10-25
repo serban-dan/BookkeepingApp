@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using BookkeepingApp.Interfaces;
 using BookkeepingApp.Models;
+using BookkeepingApp.Services;
 
 namespace BookkeepingApp.Repositories
 {
@@ -85,7 +86,7 @@ namespace BookkeepingApp.Repositories
             if (rental == null) return 0m;
 
             // 1. Calculate Fee
-            decimal fee = _feeService.CalculateFee(rental.DueDate, DateTime.Now);
+            decimal fee = _feeService.CalculateFee(rental.DueDate, TimeService.Now);
 
             // 2. Remove from active rentals and save rentals.json
             rentals.Remove(rental);
@@ -127,7 +128,7 @@ namespace BookkeepingApp.Repositories
                 CustomerName = rental.CustomerName,
                 RentDate = rental.RentDate,
                 DueDate = rental.DueDate,
-                ReturnedDate = DateTime.Now,
+                ReturnedDate = TimeService.Now,
                 FeeCollected = fee
             });
 

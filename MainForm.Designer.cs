@@ -40,6 +40,8 @@ partial class MainForm
         dgvRentals = new DataGridView();
         btnReturn = new Button();
         chkDarkMode = new CheckBox();
+        ChkSimulateTime = new CheckBox();
+        DtpSimulateTime = new DateTimePicker();
         grpInventory.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvBooks).BeginInit();
         grpAddBook.SuspendLayout();
@@ -282,11 +284,32 @@ partial class MainForm
         chkDarkMode.UseVisualStyleBackColor = true;
         chkDarkMode.CheckedChanged += ChkDarkMode_CheckedChanged;
         // 
+        // ChkSimulateTime
+        // 
+        ChkSimulateTime.Location = new Point(102, 12);
+        ChkSimulateTime.Name = "ChkSimulateTime";
+        ChkSimulateTime.Size = new Size(114, 23);
+        ChkSimulateTime.TabIndex = 6;
+        ChkSimulateTime.Text = "Simulate Time";
+        ChkSimulateTime.CheckedChanged += ChkSimulateTime_CheckedChanged;
+        // 
+        // DtpSimulateTime
+        // 
+        DtpSimulateTime.Enabled = false;
+        DtpSimulateTime.Format = DateTimePickerFormat.Short;
+        DtpSimulateTime.Location = new Point(233, 12);
+        DtpSimulateTime.Name = "DtpSimulateTime";
+        DtpSimulateTime.Size = new Size(99, 23);
+        DtpSimulateTime.TabIndex = 5;
+        DtpSimulateTime.ValueChanged += DtpSimulateTime_ValueChanged;
+        // 
         // MainForm
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(884, 693);
+        Controls.Add(DtpSimulateTime);
+        Controls.Add(ChkSimulateTime);
         Controls.Add(chkDarkMode);
         Controls.Add(grpRentals);
         Controls.Add(grpAddBook);
@@ -335,4 +358,6 @@ partial class MainForm
     private Button btnReturn;
     private Button btnViewStats;
     private CheckBox chkDarkMode;
+    private CheckBox ChkSimulateTime;
+    private DateTimePicker DtpSimulateTime;
 }

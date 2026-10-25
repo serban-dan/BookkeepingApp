@@ -1,9 +1,10 @@
+using BookkeepingApp.Interfaces;
+using BookkeepingApp.Models;
+using BookkeepingApp.Services;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using BookkeepingApp.Interfaces;
-using BookkeepingApp.Models;
 
 namespace BookkeepingApp
 {
@@ -211,8 +212,8 @@ namespace BookkeepingApp
                 RentalId = Guid.NewGuid().ToString(),
                 BookId = bookId,
                 CustomerName = customerName,
-                RentDate = DateTime.Now,
-                DueDate = DateTime.Now.AddDays(days),
+                RentDate = TimeService.Now,
+                DueDate = TimeService.Now.AddDays(days),
                 IsReturned = false
             };
 
@@ -403,6 +404,29 @@ namespace BookkeepingApp
             btnRent.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnReturn.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnViewStats.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        }
+
+
+
+        private void ChkSimulateTime_CheckedChanged(object sender, EventArgs e)
+        {
+            // Update the service and unlock the date picker
+            TimeService.IsSimulated = ChkSimulateTime.Checked;
+            DtpSimulateTime.Enabled = ChkSimulateTime.Checked;
+
+            if (ChkSimulateTime.Checked)
+            {
+                TimeService.SimulatedDate = DtpSimulateTime.Value;
+            }
+        }
+
+        private void DtpSimulateTime_ValueChanged(object sender, EventArgs e)
+        {
+            // Whenever you pick a new date, update the time machine
+            if (ChkSimulateTime.Checked)
+            {
+                TimeService.SimulatedDate = DtpSimulateTime.Value;
+            }
         }
     }
 }
