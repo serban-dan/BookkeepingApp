@@ -18,6 +18,7 @@ namespace BookkeepingApp
         public MainForm(IBookRepository bookRepo, IRentalRepository rentalRepo)
         {
             InitializeComponent();
+            this.MinimumSize = this.Size;
             FixResizingBehavior();
 
             _bookRepo = bookRepo;
@@ -42,7 +43,20 @@ namespace BookkeepingApp
         private async Task RefreshRentalsGridAsync()
         {
             var rentals = await _rentalRepo.GetActiveRentalsAsync();
-            dgvRentals.DataSource = rentals;
+            var books = await _bookRepo.GetAllBooksAsync(); // We need the books to look up the titles
+
+            // Use LINQ to create a custom, on-the-fly object just for the DataGrid
+            var displayRentals = rentals.Select(r => new
+            {
+                RentalId = r.RentalId,
+                CustomerName = r.CustomerName,
+                // Look up the title based on the BookId, or default to "Unknown Book" if missing
+                BookTitle = books.FirstOrDefault(b => b.Id == r.BookId)?.Title ?? "Unknown Book",
+                RentDate = r.RentDate,
+                DueDate = r.DueDate
+            }).ToList();
+
+            dgvRentals.DataSource = displayRentals;
             FormatRentalsGrid();
         }
 
@@ -369,41 +383,47 @@ namespace BookkeepingApp
         {
             if (dgvRentals.Columns.Count == 0) return;
 
-            // Hide technical columns
+            // Hide the technical ID
             if (dgvRentals.Columns["RentalId"] != null) dgvRentals.Columns["RentalId"].Visible = false;
-            if (dgvRentals.Columns["BookId"] != null) dgvRentals.Columns["BookId"].Visible = false;
-            if (dgvRentals.Columns["IsReturned"] != null) dgvRentals.Columns["IsReturned"].Visible = false;
 
-            // Rename headers
+            // Rename headers and add spacing
             if (dgvRentals.Columns["CustomerName"] != null) dgvRentals.Columns["CustomerName"].HeaderText = "Customer";
+
+            if (dgvRentals.Columns["BookTitle"] != null)
+            {
+                dgvRentals.Columns["BookTitle"].HeaderText = "Book Title";
+                dgvRentals.Columns["BookTitle"].FillWeight = 200; // Give the title more room
+            }
+
             if (dgvRentals.Columns["RentDate"] != null) dgvRentals.Columns["RentDate"].HeaderText = "Rented On";
             if (dgvRentals.Columns["DueDate"] != null) dgvRentals.Columns["DueDate"].HeaderText = "Due By";
 
-            // Format dates to drop the timestamps (e.g., 10/22/2026)
+            // Format dates cleanly (e.g., 10/22/2026)
             if (dgvRentals.Columns["RentDate"] != null) dgvRentals.Columns["RentDate"].DefaultCellStyle.Format = "d";
             if (dgvRentals.Columns["DueDate"] != null) dgvRentals.Columns["DueDate"].DefaultCellStyle.Format = "d";
         }
 
         private void FixResizingBehavior()
         {
-            // The main window's minimum size prevents the UI from crushing in on itself
-            this.MinimumSize = new System.Drawing.Size(900, 700);
 
-            // Top Left: Inventory Grid stretches wide, but stays fixed height so it doesn't overlap the bottom
-            grpInventory.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            // 1. INVENTORY (Top Left): Stretches horizontally AND vertically
+            grpInventory.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvBooks.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 
-            // Top Right: Add Book panel stays pinned to the top right corner
+            // 2. ADD BOOK (Top Right): Stays pinned to the top right, never stretches
             grpAddBook.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnViewStats.Anchor = AnchorStyles.Top | AnchorStyles.Right;
 
-            // Bottom: Rentals panel stretches wide AND stretches down to fill remaining screen space
-            grpRentals.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            // 3. RENTALS (Bottom): Pinned ONLY to the bottom. 
+            // As the window grows taller, this panel gets pushed down to make room for the top grid.
+            grpRentals.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+
+            // The grid inside the rental panel stretches to fill the panel
             dgvRentals.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 
-            // Keep the Rent/Return buttons anchored to their specific corners within the Rental group
+            // Keep buttons pinned to the right side of the bottom panel
             btnRent.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnReturn.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnViewStats.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         }
 
 

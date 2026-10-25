@@ -58,9 +58,11 @@ partial class MainForm
         grpInventory.Controls.Add(btnSearch);
         grpInventory.Controls.Add(dgvBooks);
         grpInventory.Controls.Add(btnOrderMissing);
-        grpInventory.Location = new Point(12, 42);
+        grpInventory.Location = new Point(14, 56);
+        grpInventory.Margin = new Padding(3, 4, 3, 4);
         grpInventory.Name = "grpInventory";
-        grpInventory.Size = new Size(520, 350);
+        grpInventory.Padding = new Padding(3, 4, 3, 4);
+        grpInventory.Size = new Size(594, 467);
         grpInventory.TabIndex = 0;
         grpInventory.TabStop = false;
         grpInventory.Text = "1. Inventory Management (Select a book to rent)";
@@ -68,24 +70,26 @@ partial class MainForm
         // lblSearch
         // 
         lblSearch.AutoSize = true;
-        lblSearch.Location = new Point(15, 30);
+        lblSearch.Location = new Point(17, 40);
         lblSearch.Name = "lblSearch";
-        lblSearch.Size = new Size(75, 15);
+        lblSearch.Size = new Size(94, 20);
         lblSearch.TabIndex = 4;
         lblSearch.Text = "Search Book:";
         // 
         // txtSearch
         // 
-        txtSearch.Location = new Point(15, 50);
+        txtSearch.Location = new Point(17, 67);
+        txtSearch.Margin = new Padding(3, 4, 3, 4);
         txtSearch.Name = "txtSearch";
-        txtSearch.Size = new Size(395, 23);
+        txtSearch.Size = new Size(451, 27);
         txtSearch.TabIndex = 0;
         // 
         // btnSearch
         // 
-        btnSearch.Location = new Point(420, 49);
+        btnSearch.Location = new Point(480, 65);
+        btnSearch.Margin = new Padding(3, 4, 3, 4);
         btnSearch.Name = "btnSearch";
-        btnSearch.Size = new Size(85, 25);
+        btnSearch.Size = new Size(97, 33);
         btnSearch.TabIndex = 1;
         btnSearch.Text = "Search";
         btnSearch.UseVisualStyleBackColor = true;
@@ -96,19 +100,22 @@ partial class MainForm
         dgvBooks.AllowUserToDeleteRows = false;
         dgvBooks.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         dgvBooks.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        dgvBooks.Location = new Point(15, 85);
+        dgvBooks.Location = new Point(17, 113);
+        dgvBooks.Margin = new Padding(3, 4, 3, 4);
         dgvBooks.Name = "dgvBooks";
         dgvBooks.ReadOnly = true;
+        dgvBooks.RowHeadersWidth = 51;
         dgvBooks.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        dgvBooks.Size = new Size(490, 205);
+        dgvBooks.Size = new Size(560, 273);
         dgvBooks.TabIndex = 3;
         // 
         // btnOrderMissing
         // 
         btnOrderMissing.Enabled = false;
-        btnOrderMissing.Location = new Point(15, 300);
+        btnOrderMissing.Location = new Point(17, 400);
+        btnOrderMissing.Margin = new Padding(3, 4, 3, 4);
         btnOrderMissing.Name = "btnOrderMissing";
-        btnOrderMissing.Size = new Size(160, 35);
+        btnOrderMissing.Size = new Size(183, 47);
         btnOrderMissing.TabIndex = 2;
         btnOrderMissing.Text = "Order Missing Book";
         btnOrderMissing.UseVisualStyleBackColor = true;
@@ -121,9 +128,11 @@ partial class MainForm
         grpAddBook.Controls.Add(pbCoverPreview);
         grpAddBook.Controls.Add(btnSelectCover);
         grpAddBook.Controls.Add(btnAddBook);
-        grpAddBook.Location = new Point(547, 42);
+        grpAddBook.Location = new Point(625, 56);
+        grpAddBook.Margin = new Padding(3, 4, 3, 4);
         grpAddBook.Name = "grpAddBook";
-        grpAddBook.Size = new Size(325, 350);
+        grpAddBook.Padding = new Padding(3, 4, 3, 4);
+        grpAddBook.Size = new Size(371, 467);
         grpAddBook.TabIndex = 1;
         grpAddBook.TabStop = false;
         grpAddBook.Text = "Add New Book";
@@ -131,52 +140,56 @@ partial class MainForm
         // lblNewTitle
         // 
         lblNewTitle.AutoSize = true;
-        lblNewTitle.Location = new Point(20, 30);
+        lblNewTitle.Location = new Point(23, 40);
         lblNewTitle.Name = "lblNewTitle";
-        lblNewTitle.Size = new Size(63, 15);
+        lblNewTitle.Size = new Size(79, 20);
         lblNewTitle.TabIndex = 8;
         lblNewTitle.Text = "Book Title:";
         // 
         // txtNewBookTitle
         // 
-        txtNewBookTitle.Location = new Point(20, 50);
+        txtNewBookTitle.Location = new Point(23, 67);
+        txtNewBookTitle.Margin = new Padding(3, 4, 3, 4);
         txtNewBookTitle.Name = "txtNewBookTitle";
-        txtNewBookTitle.Size = new Size(285, 23);
+        txtNewBookTitle.Size = new Size(325, 27);
         txtNewBookTitle.TabIndex = 4;
         // 
         // lblCoverPreview
         // 
         lblCoverPreview.AutoSize = true;
-        lblCoverPreview.Location = new Point(20, 85);
+        lblCoverPreview.Location = new Point(23, 113);
         lblCoverPreview.Name = "lblCoverPreview";
-        lblCoverPreview.Size = new Size(85, 15);
+        lblCoverPreview.Size = new Size(105, 20);
         lblCoverPreview.TabIndex = 9;
         lblCoverPreview.Text = "Cover Preview:";
         // 
         // pbCoverPreview
         // 
         pbCoverPreview.BorderStyle = BorderStyle.FixedSingle;
-        pbCoverPreview.Location = new Point(20, 105);
+        pbCoverPreview.Location = new Point(23, 140);
+        pbCoverPreview.Margin = new Padding(3, 4, 3, 4);
         pbCoverPreview.Name = "pbCoverPreview";
-        pbCoverPreview.Size = new Size(285, 145);
+        pbCoverPreview.Size = new Size(325, 193);
         pbCoverPreview.SizeMode = PictureBoxSizeMode.Zoom;
         pbCoverPreview.TabIndex = 6;
         pbCoverPreview.TabStop = false;
         // 
         // btnSelectCover
         // 
-        btnSelectCover.Location = new Point(20, 260);
+        btnSelectCover.Location = new Point(23, 347);
+        btnSelectCover.Margin = new Padding(3, 4, 3, 4);
         btnSelectCover.Name = "btnSelectCover";
-        btnSelectCover.Size = new Size(285, 30);
+        btnSelectCover.Size = new Size(326, 40);
         btnSelectCover.TabIndex = 5;
         btnSelectCover.Text = "Select Cover Image ...";
         btnSelectCover.UseVisualStyleBackColor = true;
         // 
         // btnAddBook
         // 
-        btnAddBook.Location = new Point(20, 300);
+        btnAddBook.Location = new Point(23, 400);
+        btnAddBook.Margin = new Padding(3, 4, 3, 4);
         btnAddBook.Name = "btnAddBook";
-        btnAddBook.Size = new Size(285, 35);
+        btnAddBook.Size = new Size(326, 47);
         btnAddBook.TabIndex = 7;
         btnAddBook.Text = "Add Book";
         btnAddBook.UseVisualStyleBackColor = true;
@@ -191,18 +204,21 @@ partial class MainForm
         grpRentals.Controls.Add(btnRent);
         grpRentals.Controls.Add(dgvRentals);
         grpRentals.Controls.Add(btnReturn);
-        grpRentals.Location = new Point(12, 398);
+        grpRentals.Location = new Point(14, 531);
+        grpRentals.Margin = new Padding(3, 4, 3, 4);
         grpRentals.Name = "grpRentals";
-        grpRentals.Size = new Size(858, 275);
+        grpRentals.Padding = new Padding(3, 4, 3, 4);
+        grpRentals.Size = new Size(981, 367);
         grpRentals.TabIndex = 2;
         grpRentals.TabStop = false;
         grpRentals.Text = "2. Rental Desk (Select from Inventory to Rent, or from below to Return)";
         // 
         // btnViewStats
         // 
-        btnViewStats.Location = new Point(720, 126);
+        btnViewStats.Location = new Point(823, 168);
+        btnViewStats.Margin = new Padding(3, 4, 3, 4);
         btnViewStats.Name = "btnViewStats";
-        btnViewStats.Size = new Size(118, 54);
+        btnViewStats.Size = new Size(135, 72);
         btnViewStats.TabIndex = 7;
         btnViewStats.Text = "View Store Statistics";
         btnViewStats.UseVisualStyleBackColor = true;
@@ -211,42 +227,45 @@ partial class MainForm
         // lblCustomerName
         // 
         lblCustomerName.AutoSize = true;
-        lblCustomerName.Location = new Point(15, 35);
+        lblCustomerName.Location = new Point(17, 47);
         lblCustomerName.Name = "lblCustomerName";
-        lblCustomerName.Size = new Size(97, 15);
+        lblCustomerName.Size = new Size(119, 20);
         lblCustomerName.TabIndex = 0;
         lblCustomerName.Text = "Customer Name:";
         // 
         // txtCustomerName
         // 
-        txtCustomerName.Location = new Point(115, 32);
+        txtCustomerName.Location = new Point(142, 44);
+        txtCustomerName.Margin = new Padding(3, 4, 3, 4);
         txtCustomerName.Name = "txtCustomerName";
-        txtCustomerName.Size = new Size(150, 23);
+        txtCustomerName.Size = new Size(171, 27);
         txtCustomerName.TabIndex = 1;
         // 
         // lblRentDays
         // 
         lblRentDays.AutoSize = true;
-        lblRentDays.Location = new Point(285, 35);
+        lblRentDays.Location = new Point(326, 47);
         lblRentDays.Name = "lblRentDays";
-        lblRentDays.Size = new Size(78, 15);
+        lblRentDays.Size = new Size(98, 20);
         lblRentDays.TabIndex = 2;
         lblRentDays.Text = "Days To Rent:";
         // 
         // nudRentDays
         // 
-        nudRentDays.Location = new Point(370, 32);
+        nudRentDays.Location = new Point(430, 44);
+        nudRentDays.Margin = new Padding(3, 4, 3, 4);
         nudRentDays.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
         nudRentDays.Name = "nudRentDays";
-        nudRentDays.Size = new Size(60, 23);
+        nudRentDays.Size = new Size(69, 27);
         nudRentDays.TabIndex = 3;
         nudRentDays.Value = new decimal(new int[] { 7, 0, 0, 0 });
         // 
         // btnRent
         // 
-        btnRent.Location = new Point(450, 30);
+        btnRent.Location = new Point(525, 44);
+        btnRent.Margin = new Padding(3, 4, 3, 4);
         btnRent.Name = "btnRent";
-        btnRent.Size = new Size(120, 28);
+        btnRent.Size = new Size(137, 27);
         btnRent.TabIndex = 4;
         btnRent.Text = "Rent Selected Book";
         btnRent.UseVisualStyleBackColor = true;
@@ -257,18 +276,21 @@ partial class MainForm
         dgvRentals.AllowUserToDeleteRows = false;
         dgvRentals.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         dgvRentals.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        dgvRentals.Location = new Point(15, 75);
+        dgvRentals.Location = new Point(17, 100);
+        dgvRentals.Margin = new Padding(3, 4, 3, 4);
         dgvRentals.Name = "dgvRentals";
         dgvRentals.ReadOnly = true;
+        dgvRentals.RowHeadersWidth = 51;
         dgvRentals.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        dgvRentals.Size = new Size(690, 185);
+        dgvRentals.Size = new Size(789, 247);
         dgvRentals.TabIndex = 5;
         // 
         // btnReturn
         // 
-        btnReturn.Location = new Point(720, 75);
+        btnReturn.Location = new Point(823, 100);
+        btnReturn.Margin = new Padding(3, 4, 3, 4);
         btnReturn.Name = "btnReturn";
-        btnReturn.Size = new Size(120, 45);
+        btnReturn.Size = new Size(137, 60);
         btnReturn.TabIndex = 6;
         btnReturn.Text = "Return Selected";
         btnReturn.UseVisualStyleBackColor = true;
@@ -276,9 +298,10 @@ partial class MainForm
         // chkDarkMode
         // 
         chkDarkMode.AutoSize = true;
-        chkDarkMode.Location = new Point(12, 12);
+        chkDarkMode.Location = new Point(14, 16);
+        chkDarkMode.Margin = new Padding(3, 4, 3, 4);
         chkDarkMode.Name = "chkDarkMode";
-        chkDarkMode.Size = new Size(84, 19);
+        chkDarkMode.Size = new Size(105, 24);
         chkDarkMode.TabIndex = 3;
         chkDarkMode.Text = "Dark Mode";
         chkDarkMode.UseVisualStyleBackColor = true;
@@ -305,7 +328,7 @@ partial class MainForm
         // 
         // MainForm
         // 
-        AutoScaleDimensions = new SizeF(7F, 15F);
+        AutoScaleDimensions = new SizeF(8F, 20F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(884, 693);
         Controls.Add(DtpSimulateTime);
@@ -314,6 +337,7 @@ partial class MainForm
         Controls.Add(grpRentals);
         Controls.Add(grpAddBook);
         Controls.Add(grpInventory);
+        Margin = new Padding(3, 4, 3, 4);
         Name = "MainForm";
         StartPosition = FormStartPosition.CenterScreen;
         Text = "Admin Panel - Bookkeeping";
